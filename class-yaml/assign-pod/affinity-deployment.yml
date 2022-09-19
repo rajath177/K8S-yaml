@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-affinity-deployment
+  labels:
+    app: nginx-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: my-nginx 
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+    spec:
+      affinity:
+        nodeAffinity:      
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/os 
+                operator: In
+                values:
+                - linux
+      containers:
+      - name: nginx-dp
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
